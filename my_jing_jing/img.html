@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Beautiful Xiao Jing Jing 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-pink: #ff6b81;
+            --secondary-pink: #ffb6b9;
+            --light-gradient: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            --button-gradient: linear-gradient(90deg, var(--primary-pink) 0%, var(--secondary-pink) 100%);
+            --button-hover-gradient: linear-gradient(90deg, var(--secondary-pink) 0%, var(--primary-pink) 100%);
+            --text-light: #fff;
+            --text-dark: #333;
+            --shadow-color: rgba(255,105,135,0.25);
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-gradient);
+            color: var(--text-dark);
+            text-align: center;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container {
+            background: rgba(255,255,255,0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            border-radius: 30px;
+            padding: 40px 30px 50px 30px;
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.18);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 2.8em;
+            color: var(--text-light);
+            text-shadow: 2px 2px 18px var(--shadow-color);
+            font-family: 'Pacifico', cursive;
+            letter-spacing: 2px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin: 20px auto 30px auto;
+            width: 95%;
+            color: var(--text-light);
+            text-shadow: 1px 1px 8px var(--shadow-color);
+        }
+
+        .heart {
+            position: fixed;
+            top: -10px;
+            font-size: 28px;
+            animation: fall 5s linear infinite;
+            filter: drop-shadow(0 2px 8px #ff6b81aa);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--button-gradient);
+            color: var(--text-light);
+            border: none;
+            padding: 14px 35px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 18px 0 var(--shadow-color);
+            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+            outline: none;
+        }
+
+        button:hover {
+            background: var(--button-hover-gradient);
+            box-shadow: 0 0 24px 4px #ff6b81cc;
+            transform: scale(1.07);
+        }
+
+        #noBtn { position: relative; }
+        #finalMessage { display: none; margin-top: 35px; animation: pop 0.7s; }
+
+        #finalMessage h2 {
+            font-size: 2em;
+            color: var(--text-light);
+            font-weight: bold;
+            text-shadow: 2px 2px 18px #ff6b81aa;
+            font-family: 'Pacifico', cursive;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .gallery img:hover { transform: scale(1.1); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+        
+        #question { font-size: 1.4em; font-weight: 700; color: #fff; text-shadow: 1px 1px 8px rgba(255,105,135,0.2); margin-bottom: 25px; }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.5s;
+            padding: 20px;
+            box-sizing: border-box;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 85%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        #caption, #album-caption { 
+            margin: 15px auto; 
+            display: block; 
+            width: 80%; 
+            max-width: 700px; 
+            text-align: center; 
+            color: #f1f1f1; 
+            font-size: 1.2em; 
+        }
+        
+        .close { 
+            position: absolute; 
+            top: 10px; 
+            right: 20px; 
+            color: #f1f1f1; 
+            font-size: 40px; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            cursor: pointer; 
+            z-index: 101; 
+        }
+        
+        /* Album Modal Specific - UPDATED */
+        #album-image { 
+            border-radius: 15px; 
+            width:100%;
+            max-height: 60vh;
+            object-fit: contain;
+        }
+        
+        /* New Album Navigation Styles */
+        .album-nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .album-nav {
+            background: var(--button-gradient);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .album-nav:hover {
+            background: var(--button-hover-gradient);
+            transform: scale(1.05);
+        }
+        
+        .album-counter {
+            color: white;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+
+        /* Q&A Modal Specific */
+        #qa-modal-content { background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; color: white; }
+        #qa-question { font-size: 1.5em; margin-bottom: 20px; }
+        #qa-answers button { margin: 5px; }
+        
+        /* Letter Modal Specific */
+        #letter-modal-content { 
+            background: rgba(0,0,0,0.5); 
+            padding: 40px; 
+            border-radius: 10px; 
+            color: white; 
+            max-width: 500px; 
+            font-family: 'Pacifico', cursive; 
+            font-size: 1.8em; 
+            line-height: 1.6; 
+        }
+        #typed-text::after { content: '|'; animation: blink 1s step-end infinite; }
+        @keyframes blink { from, to { color: transparent; } 50% { color: white; } }
+
+        @keyframes pop { 0% { transform: scale(0.7); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); } }
+
+        /* New Elements */
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            animation: sparkle 1.5s linear forwards;
+        }
+
+        @keyframes sparkle {
+            0% { transform: translate(0, 0) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1.5); opacity: 0; }
+        }
+
+        .floating-hearts {
+            position: absolute;
+            font-size: 20px;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        .memory-box {
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .memory-box:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-5px);
+        }
+
+        .countdown {
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: white;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2.2em; }
+            p { font-size: 1.05em; }
+            #question, #finalMessage h2, #qa-question { font-size: 1.25em; }
+            .gallery { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .gallery img { height: 120px; }
+            button { padding: 12px 28px; font-size: 1em; }
+            .modal-content { width: 95%; padding: 10px; }
+            .album-nav { padding: 10px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>For My Beautiful Xiao Jing Jing 💕</h1>
+        <p>My dearest Seavchinh, from the moment you came into my life, everything changed. Your smile brightens my darkest days, your laughter is my favorite melody, and your love is the greatest gift I've ever received. This is for you, my love. 🌸</p>
+        
+        <div class="countdown" id="countdown"></div>
+        
+        <div id="questionSection">
+            <div id="question">O sl b ot?</div>
+            <div class="button-container">
+                <button onclick="showLove()">Yes, O sl b! 🥰</button>
+                <button id="noBtn" onmouseover="runAway()" onclick="runAway()">Maybe... 😢</button>
+            </div>
+        </div>
+
+        <div id="finalMessage">
+            <h2>My heart knew you'd say yes! I love you more than words can express, Seavchinh 💖</h2>
+            <p style="font-size: 1em;">Here are some of our precious memories together...</p>
+            
+            <div class="gallery">
+                <img src="https://placehold.co/300x300/ff9a9e/FFF?text=Our+First+Date" onclick="openAlbum()">
+                <img src="https://placehold.co/300x300/fad0c4/FFF?text=That+Funny+Day" onclick="startQuizAndMusic()">
+                <img src="https://placehold.co/300x300/ff6b81/FFF?text=My+Favorite+Smile" onclick="showLoveLetter()">
+            </div>
+            
+            <div class="memory-box" onclick="showSpecialMemory()">
+                <h3>💝 Click here for a special surprise</h3>
+            </div>
+            
+            <div class="memory-box" onclick="showCountdown()">
+                <h3>⏳ Our Time Together</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Album Modal - UPDATED -->
+    <div id="albumModal" class="modal" onclick="closeModal('albumModal')">
+        <div class="modal-content" onclick="event.stopPropagation();">
+            <span class="close" onclick="closeModal('albumModal')">&times;</span>
+            <img id="album-image">
+            <div id="album-caption"></div>
+            <div class="album-counter" id="album-counter"></div>
+            <div class="album-nav-container">
+                <button class="album-nav" onclick="changeSlide(-1)">Previous</button>
+                <button class="album-nav" onclick="changeSlide(1)">Next</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Q&A Modal -->
+    <div id="qaModal" class="modal">
+        <div id="qa-modal-content">
+             <span class="close" onclick="closeModal('qaModal')">&times;</span>
+            <div id="qa-question"></div>
+            <div id="qa-answers"></div>
+        </div>
+    </div>
+    
+    <!-- Love Letter Modal -->
+    <div id="letterModal" class="modal" onclick="closeModal('letterModal')">
+        <div id="letter-modal-content">
+             <span class="close" onclick="closeModal('letterModal')">&times;</span>
+             <p id="typed-text"></p>
+        </div>
+    </div>
+    
+    <!-- Special Memory Modal -->
+    <div id="memoryModal" class="modal" onclick="closeModal('memoryModal')">
+        <div id="memory-modal-content" style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; color: white; max-width: 500px;">
+             <span class="close" onclick="closeModal('memoryModal')">&times;</span>
+             <h2>My Favorite Memory With You</h2>
+             <p id="memory-text"></p>
+        </div>
+    </div>
+
+    <!-- Hidden Audio Player -->
+    <audio id="mySong" loop>
+        <!-- IMPORTANT: Replace with your MP3 link -->
+        <source src="song/LONG_WAY_ផកមយទង_Feat_Snapper_Official_Lyrics_Video_2.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const noBtn = document.getElementById("noBtn");
+        const questionSection = document.getElementById("questionSection");
+        const finalMessage = document.getElementById("finalMessage");
+        let noCount = 0;
+        const romanticMessages = [
+            "O ot sl b heh men? 🥺",
+            "Really sure? 💔",
+            "Think again o ! 😢",
+            "This makes me sad... 😭",
+            "My heart is breaking, ouy cher besdong... 💔",
+            "You're breaking my heart... 💘",
+            "I'll be really sad...",
+            "Okay, I'll stop asking...",
+            "Just kidding! I know you love me! 💖"
+        ];
+
+        function showLove() {
+            questionSection.style.display = "none";
+            finalMessage.style.display = "block";
+            
+            // Enhanced celebration
+            confetti({ particleCount: 200, spread: 180, origin: { y: 0.6 } });
+            setTimeout(() => confetti({ particleCount: 150, angle: 60, spread: 80, origin: { x: 0 } }), 250);
+            setTimeout(() => confetti({ particleCount: 150, angle: 120, spread: 80, origin: { x: 1 } }), 400);
+            
+            // Create floating hearts
+            createFloatingHearts();
+            
+            // Start subtle background music
+            const song = document.getElementById('mySong');
+            if(song.src && !song.src.includes('song/LONG_WAY_ផកមយទង_Feat_Snapper_Official_Lyrics_Video_2.mp3')) {
+                song.volume = 0.3;
+                song.play();
+            }
+        }
+
+        function runAway() {
+            noCount++;
+            if (noCount < romanticMessages.length) {
+                noBtn.textContent = romanticMessages[noCount-1];
+            } else {
+                noBtn.textContent = "Okay, I love you! 💖";
+                noBtn.onmouseover = null;
+                noBtn.onclick = showLove;
+            }
+            
+            const container = document.querySelector(".container");
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            let newTop = Math.random() * (containerRect.height - btnRect.height);
+            let newLeft = Math.random() * (containerRect.width - btnRect.width);
+            noBtn.style.position = 'absolute';
+            noBtn.style.top = `${newTop}px`;
+            noBtn.style.left = `${newLeft}px`;
+            
+            // Add sparkle effect
+            createSparkles(container);
+        }
+        
+        function createSparkles(container) {
+            for (let i = 0; i < 15; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                sparkle.style.left = `${Math.random() * 100}%`;
+                sparkle.style.top = `${Math.random() * 100}%`;
+                sparkle.style.setProperty('--tx', `${Math.random() * 100 - 50}px`);
+                sparkle.style.setProperty('--ty', `${Math.random() * 100 - 50}px`);
+                sparkle.style.animationDelay = `${Math.random() * 0.5}s`;
+                container.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 1500);
+            }
+        }
+        
+        function createFloatingHearts() {
+            const hearts = ['💖', '💕', '💘', '💓', '💗', '💝'];
+            const container = document.querySelector('.container');
+            
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-hearts');
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.top = `${Math.random() * 100}%`;
+                heart.style.fontSize = `${Math.random() * 15 + 15}px`;
+                heart.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(heart);
+            }
+        }
+        
+        function closeModal(modalId) { 
+            document.getElementById(modalId).style.display = "none"; 
+        }
+        
+        // --- 1. ALBUM ---
+        const albumImages = [
+            // IMPORTANT: Replace with your own image links and captions
+            { src: "img/photo_5_2025-09-13_00-06-36.jpg", caption: "This pic took it with phone bos b o jam ot?." },
+            { src: "img/photo_7_2025-09-13_00-06-36.jpg", caption: "I still remember how my heart raced when I leaned in closer to you." },
+            { src: "img/photo_1_2025-09-13_00-06-32.jpg", caption: "yk phone b thot tt hx mer muk lerg cute emoji(បោកប្រាស់)." },
+            { src: "img/photo_4_2025-09-13_00-06-36.jpg", caption: "I am your and you're mine បងជារបស់អូននិងបងជារបស់អូន❤️" },
+            { src: "img/photo_2025-09-14_18-07-53.jpg", caption: "One day or day 1." }
+        ];
+        let currentSlide = 0;
+        
+        function openAlbum() {
+            currentSlide = 0;
+            updateAlbum();
+            document.getElementById('albumModal').style.display = 'flex';
+        }
+        
+        function changeSlide(n) {
+            currentSlide += n;
+            if (currentSlide >= albumImages.length) { currentSlide = 0; }
+            if (currentSlide < 0) { currentSlide = albumImages.length - 1; }
+            updateAlbum();
+        }
+
+        function updateAlbum() {
+            document.getElementById('album-image').src = albumImages[currentSlide].src;
+            document.getElementById('album-caption').textContent = albumImages[currentSlide].caption;
+            document.getElementById('album-counter').textContent = `${currentSlide + 1} / ${albumImages.length}`;
+        }
+
+        // --- 2. MUSIC & QUIZ ---
+        const quizData = [
+            // IMPORTANT: Personalize these questions
+            { question: "O sur b , b sl o yu nv?", answer: "b sl yu hx kal nv hight school but only cr b ot confess because ot jg breaking our friendship." },
+            { question: "What's my favorite thing about you?", answer: "Everything! But especially your kaj cnas  and the way your voice when you j me." },
+            { question: "What song reminds me of you?", answer: "'Perfect' by Ed Sheeran, because that's what we are together." },
+            { question: "What's my dream for us?", answer: "To build a lifetime of beautiful memories together, growing old side by side." },
+            { question: "How much do I love you?", answer: "More than all the stars in the sky and all the fish in the ocean! (b boak te kom jer) 💖" }
+        ];
+        let currentQuestion = 0;
+
+        function startQuizAndMusic() {
+            const song = document.getElementById('mySong');
+            if(song.src && !song.src.includes('https://youtu.be/AMM2fql94b0?si=aqz9uq_Uv4woeivh')) {
+                song.volume = 0.5;
+                song.play();
+            }
+            currentQuestion = 0;
+            displayQuestion();
+            document.getElementById('qaModal').style.display = 'flex';
+        }
+
+        function displayQuestion() {
+            const qaQuestionEl = document.getElementById('qa-question');
+            const qaAnswersEl = document.getElementById('qa-answers');
+            qaAnswersEl.innerHTML = '';
+            
+            if (currentQuestion < quizData.length) {
+                qaQuestionEl.textContent = quizData[currentQuestion].question;
+                const button = document.createElement('button');
+                button.textContent = "Reveal My Answer";
+                button.onclick = () => {
+                    qaQuestionEl.textContent = quizData[currentQuestion].answer;
+                    qaAnswersEl.innerHTML = '';
+                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    setTimeout(() => {
+                        currentQuestion++;
+                        if (currentQuestion < quizData.length) {
+                            displayQuestion();
+                        } else {
+                            qaQuestionEl.textContent = "Every moment with you is special. I love you more each day! 💖";
+                            qaAnswersEl.innerHTML = '<button onclick="closeModal(\'qaModal\')">Close</button>';
+                        }
+                    }, 3000);
+                };
+                qaAnswersEl.appendChild(button);
+            } else {
+                qaQuestionEl.textContent = "Every moment with you is special. I love you more each day! 💖";
+                qaAnswersEl.innerHTML = '<button onclick="closeModal(\'qaModal\')">Close</button>';
+            }
+        }
+
+        // --- 3. LOVE LETTER ---
+        const letterText = "My dearest Xiao Jing Jing,\n\nFrom the moment I met you, I knew there was something special about you. Your smile, your laugh, the way you care about others - everything about you makes me fall in love with you more each day.\n\nYou've brought so much joy and meaning to my life. When I'm with you, everything feels right in the world. You're my best friend, my confidant, and the love of my life.\n\nI promise to always cherish you, support you, and love you with all my heart. Thank you for being you.\n\nForever yours,\n\n[Your Name]";
+        let typeIndex = 0;
+
+        function showLoveLetter() {
+            typeIndex = 0;
+            document.getElementById('typed-text').textContent = '';
+            document.getElementById('letterModal').style.display = 'flex';
+            typeWriter();
+        }
+
+        function typeWriter() {
+            if (typeIndex < letterText.length) {
+                const currentChar = letterText.charAt(typeIndex);
+                document.getElementById('typed-text').textContent += currentChar;
+                typeIndex++;
+                setTimeout(typeWriter, currentChar === '\n' ? 500 : 50);
+            }
+        }
+        
+        // --- 4. SPECIAL MEMORY ---
+        function showSpecialMemory() {
+            const memories = [
+                "Remember?.",
+                "The time that....",
+                "Our first vacation together ...",
+                "The time when kmean you me sby jit."
+            ];
+            
+            document.getElementById('memory-text').textContent = memories[Math.floor(Math.random() * memories.length)];
+            document.getElementById('memoryModal').style.display = 'flex';
+        }
+        
+        // --- 5. COUNTDOWN ---
+        function showCountdown() {
+            // Set your anniversary date here (format: YYYY-MM-DD)
+            const anniversaryDate = new Date("2023-05-20");
+            const today = new Date();
+            const diffTime = Math.abs(today - anniversaryDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            
+            document.getElementById('countdown').textContent = `We've been together for (I don't know) amazing days! 💖`;
+            document.getElementById('countdown').style.display = 'block';
+            
+            // Hide after 7 seconds
+            setTimeout(() => {
+                document.getElementById('countdown').style.display = 'none';
+            }, 7000);
+        }
+
+        // --- GENERAL ---
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.innerHTML = "💖";
+            heart.classList.add("heart");
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+            heart.style.opacity = Math.random();
+            heart.style.fontSize = (Math.random() * 16 + 12) + "px";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 7000);
+        }
+        setInterval(createHeart, 400);
+        
+        // Add sparkle effect on click anywhere
+        document.addEventListener('click', function(e) {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+            sparkle.style.left = `${e.pageX}px`;
+            sparkle.style.top = `${e.pageY}px`;
+            sparkle.style.setProperty('--tx', `${Math.random() * 40 - 20}px`);
+            sparkle.style.setProperty('--ty', `${Math.random() * 40 - 20}px`);
+            document.body.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.remove();
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
